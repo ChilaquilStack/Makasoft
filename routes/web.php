@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+//VerifyCsrfToken fue quitado para pruebas, colocar la protecion una vez finalizada la api 
+Route::resource('pokemons', 'PokemonController');

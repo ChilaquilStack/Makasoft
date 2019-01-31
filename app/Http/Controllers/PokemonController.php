@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Pokemon;
 use Illuminate\Http\Request;
 
-class PokemonController extends Controller
-{
+class PokemonController extends Controller {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+
+    public function index(Request $request){
+        
+        $pokemons = Pokemon::All();
+        
+        return response()->json(["pokemons" => $pokemons], 200);
+    
     }
 
     /**
@@ -33,9 +36,13 @@ class PokemonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request) {
+        
+        $pokemon =  $request->input('pokemon');
+        
+        $newPokemon = Pokemon::create($pokemon);
+        
+        return response()->json($newPokemon, 201);
     }
 
     /**
@@ -44,9 +51,10 @@ class PokemonController extends Controller
      * @param  \App\Pokemon  $pokemon
      * @return \Illuminate\Http\Response
      */
-    public function show(Pokemon $pokemon)
-    {
-        //
+    public function show(Pokemon $pokemon) {
+
+        return response()->json(['pokemon' => $pokemon], 202);
+    
     }
 
     /**
@@ -55,9 +63,10 @@ class PokemonController extends Controller
      * @param  \App\Pokemon  $pokemon
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pokemon $pokemon)
-    {
-        //
+    public function edit(Pokemon $pokemon) {
+
+
+        
     }
 
     /**
@@ -67,9 +76,15 @@ class PokemonController extends Controller
      * @param  \App\Pokemon  $pokemon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pokemon $pokemon)
-    {
-        //
+    public function update(Request $request, Pokemon $pokemon) {
+
+        $data = $request->input('pokemon');
+        
+        $pokemon->update($data);
+
+        //$pokemon->save();
+        
+        return response()->json(['pokemon' => $pokemon], 200);
     }
 
     /**
@@ -78,8 +93,9 @@ class PokemonController extends Controller
      * @param  \App\Pokemon  $pokemon
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pokemon $pokemon)
-    {
-        //
+    public function destroy(Pokemon $pokemon) {
+        $pokemon->active = false;
+        $pokemon->save();
+        return response()->json($pokemon,200);
     }
 }
