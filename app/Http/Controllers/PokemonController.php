@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Pokemon;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePokemonPost;
+use App\Http\Requests\UpdatePokemonPost;
 
 class PokemonController extends Controller {
     /**
@@ -14,9 +16,21 @@ class PokemonController extends Controller {
 
     public function index(Request $request){
         
-        $pokemons = Pokemon::All();
+        $pokemons = Pokemon::where('active', true)->paginate(6);
+
+        $response = [
+            'pagination' => [
+                'total' => $pokemons->total(),
+                'per_page' => $pokemons->perPage(),
+                'current_page' => $pokemons->currentPage(),
+                'last_page' => $pokemons->lastPage(),
+                'from' => $pokemons->firstItem(),
+                'to' => $pokemons->lastItem()
+                ],
+            'data' => $pokemons,
+        ];
         
-        return response()->json(["pokemons" => $pokemons], 200);
+        return response()->json($response, 200);
     
     }
 
@@ -36,13 +50,19 @@ class PokemonController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        
-        $pokemon =  $request->input('pokemon');
-        
-        $newPokemon = Pokemon::create($pokemon);
-        
-        return response()->json($newPokemon, 201);
+    public function store(StorePokemonPost $request) {
+
+        $imagen = $request->file("picture");
+        $nombre = time() . $imagen->getClientOriginalName();
+        $dir = public_path().'/img/';
+        $subir = $imagen->move($dir, $nombre);
+        Pokemon::create([
+            'name' => $request['name'],
+            'picture' => $nombre,
+            'class' => $request['class'],
+            'level' => $request['level']
+        ]);
+        return response()->json(['message' => 'Se agrego el socio con exito'], 200);
     }
 
     /**
@@ -76,15 +96,33 @@ class PokemonController extends Controller {
      * @param  \App\Pokemon  $pokemon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pokemon $pokemon) {
+    public function update(UpdatePokemonPost $request, Pokemon $pokemon) {
 
-        $data = $request->input('pokemon');
-        
-        $pokemon->update($data);
+        if($request->hasFile('picture')){
 
-        //$pokemon->save();
+            $imagen = $request->file("picture");
+            $nombre = time() . $imagen->getClientOriginalName();
+            $dir = public_path().'/img/';
+            $subir = $imagen->move($dir, $nombre);
+            $pokemon->update([
+                'name' => $request['name'],
+                'picture' => $nombre,   
+                'class' => $request['class'],
+                'level' => $request['level']
+            ]);
         
+        } else {
+                
+            $pokemon->update([
+                'name' => $request['name'],
+                'picture' => $request['picture'],
+                'class' => $request['class'],
+                'level' => $request['level']
+            ]);
+        }
+            
         return response()->json(['pokemon' => $pokemon], 200);
+
     }
 
     /**
@@ -97,5 +135,18 @@ class PokemonController extends Controller {
         $pokemon->active = false;
         $pokemon->save();
         return response()->json($pokemon,200);
+    }
+
+    public function search(Request $request) {
+
+        $pokemons = [];
+        
+        $parametro = $request['value'];
+        
+        if(trim($parametro) != ''){
+            $pokemons =  Pokemon::search($parametro);
+        }
+
+        return response()->json(['pokemons' => $pokemons], 200);
     }
 }

@@ -21,7 +21,6 @@ class Pokemons extends Migration
             $table->string('class');
             $table->string('picture');
             $table->boolean('active')->default(true);
-            $table->string('slug')->unique();
             $table->timestamps();
             
         });

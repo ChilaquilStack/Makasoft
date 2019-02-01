@@ -8,11 +8,13 @@ class Pokemon extends Model {
     protected $table = 'pokemons';
     protected $primaryKey = 'id';
     protected $fillable = ['name','level','class','picture','active'];
-    protected $attributes = [
-        'name' => 'pokemon',
-        'level' => 0,
-        'class' => 'generico',
-        'picture' => 'picture.jpg',
-        'active' => true,
-    ];
+    public function scopeSearch($query, $parametro){
+        $busqueda = '%' . $parametro . '%';
+        if(trim($parametro) != ''){
+	    	return $query->where([['name','like', $busqueda],['active','=',true]])
+	    	->orWhere([['level','=', $parametro],['active',true]])
+	    	->orWhere([['class','like', $busqueda],['active',true]])
+	    	->get();
+    	}
+    }
 }
