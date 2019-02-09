@@ -22,7 +22,16 @@
 
                 axios
                 .post(url,{value})
-                .then(response => this.$emit('search', response.data.pokemons))
+                .then(response => {
+                    
+                    const {pokemons} = response.data;
+
+                    if(pokemons.length)
+                        this.$store.dispatch('searchPokemons', pokemons);
+                    else
+                        this.$store.dispatch('getPokemons');
+                
+                })
                 .catch(e => console.log(e));
             }
 

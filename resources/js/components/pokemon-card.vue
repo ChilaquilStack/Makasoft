@@ -5,29 +5,39 @@
         <div class="col-sm-12 col-md-3 col-xl-4 col-lg-4" v-for="pokemon in pokemons">
             
             <div class="card" style="width: 18rem;">
+                
                 <img :src="`img/${pokemon.picture}`" class="card-img-top" :alt="pokemon.picture" @click="show(pokemon)">
                 
                 <div class="card-body">
+                    
                     <h5 class="card-title text-center">{{pokemon.name}}</h5>
+                    
                     <p class="card-text text-center">
                         <small class="text-muted">{{pokemon.class}} / {{pokemon.level}}</small>
                     </p>
+               
                 </div>
                 
                 <div class="card-footer btn-group text-center">
+                    
                     <a href="#" class="btn btn-danger" @click="remove(pokemon)">
                         <i class="fas fa-trash"></i>
                     </a>
+                    
                     <a href="#" class="btn btn-warning" @click="edit(pokemon)">
                         <i class="far fa-edit"></i>
                     </a>
+                
                 </div>
             
             </div>
         
         </div>
-        <pokemonModal :pokemon="pokemon"></pokemonModal>
+
+        <pokemonModal :pokemon="showPokemon"/>
+    
     </div>
+
 </template>
 
 <script>
@@ -35,8 +45,12 @@
     const modal = require('./pokemon-modal').default;
 
     export default {
-    
-        props:['pokemons'],
+
+        data(){
+            return{
+                showPokemon:{}
+            }
+        },
 
         components:{
 
@@ -44,32 +58,38 @@
 
         },
 
-        data(){
-            return{
-                pokemon:{}
-            }
-        },
-
         methods:{
 
             remove(pokemon) {
 
-                this.$emit('remove', pokemon);
+                this.$store.dispatch('removePokemon', {...pokemon});
+                this.$store.dispatch('getPokemons');
 
             },
 
             show(pokemon){
 
-                this.pokemon = pokemon;
+                this.showPokemon = {...pokemon};
                 $('#modal').modal();
 
             },
 
             edit(pokemon) {
-                this.$emit('edit', pokemon);
+                this.$store.dispatch('editPokemon', {...pokemon});
             }
 
-        }
+        },
+
+        computed: {
+
+            pokemons() {
+                return this.$store.getters.pokemons;
+            },
+
+            pokemon(){
+                return this.$store.getters.pokemon;
+            }
+        },
 
     }
 </script>

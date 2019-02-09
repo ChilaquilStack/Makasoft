@@ -21,13 +21,19 @@
 <script>
 	
 	export default {
-		
-		props:['pagination', 'offset'],
+
+        props:['offset'],
 		
 		computed: {
+
+            pagination(){
+                return this.$store.getters.pagination;
+            },
+
 			isActived() {
                 return this.pagination.current_page;
             },
+
 			pagesNumber() {
                 let from = this.pagination.current_page - this.offset;
                 let to = from + (this.offset * 2);
@@ -47,13 +53,18 @@
                     from++;
                 }
                 return pagesArray;
-            },
+            }
 		},
 
 		methods:{
-			changePage(page) {
-				this.$emit('changepage', page)
-			}
+			
+            changePage(page) {
+                
+                this.$store.dispatch('changePage', page);
+                
+                this.$store.dispatch('getPokemons');
+			
+            }
 		}
 	}
 

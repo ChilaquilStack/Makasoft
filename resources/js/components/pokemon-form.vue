@@ -70,10 +70,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <button type="button" class="btn btn-success" @click="save">{{"Save"}}</button>
-        </div>
     
     </form>
 
@@ -81,35 +77,26 @@
 
 <script>
 
-    const axios = require('axios');
     const Swal = require('sweetalert2');
 
     export default {
 
-        props:['pokemon'],
-
-        data(){
-            return {
-                errors:{}
-            }
-        },
-
         methods: {
 
-            getImage(e){
+            getImage(e) {
                 
-                this.errors['level'] = [];
+                this.errors['picture'] = [];
                 
                 const validate = e.target.files.length ? true : false;
 
-                if(!validate)
-                    this.errors['picture'].push('Por favor ingrese un valor numerico');
-                else
+                if(validate)
                     this.pokemon.picture = e.target.files[0];
+                else
+                    this.errors['picture'].push('Por favor ingrese una imagen');
 
             },
 
-            clean(obj){
+            clean(obj) {
 
                 for(let i in obj) {
                     obj[i] = '';
@@ -138,41 +125,17 @@
 
             save() {
 
-                const formData = new FormData();
+                const pokemon = new FormData();
 
-                formData.append('name', this.pokemon.name);
-                formData.append('class', this.pokemon.class);
-                formData.append('level', this.pokemon.level);
-                formData.append('picture', this.pokemon.picture);
+                pokemon.append('id', this.pokemon.id);
+                pokemon.append('name', this.pokemon.name);
+                pokemon.append('class', this.pokemon.class);
+                pokemon.append('level', this.pokemon.level);
+                pokemon.append('picture', this.pokemon.picture);
+                
+                this.$store.dispatch('addPokemon', pokemon);
+                this.$store.dispatch('getPokemons');
 
-                if(this.pokemon.hasOwnProperty('id')) {
-
-                    const url = `pokemons/${this.pokemon.id}`;
-
-                    axios
-                    .post(url, formData)
-                    .then(response => {
-                        this.alert('success');
-                        this.$emit('getAll');
-                        this.clean(this.pokemon);
-                        this.clean(this.errors);
-                    })
-                    .catch(e => this.errors = e.response.data.errors);
-
-                } else{
-
-                    const   url = 'pokemons';
-                    
-                    axios
-                    .post(url, formData)
-                    .then(response => {
-                        this.alert('success');
-                        this.$emit('getAll');
-                        this.clean(this.pokemon);
-                        this.clean(this.errors);
-                    })
-                    .catch(e => this.errors = e.response.data.errors);
-                }
             },
 
             alert(type) {
@@ -182,7 +145,22 @@
                     timer: 1000
                 })
             }
-        }
+        },
+
+        computed: {
+            
+            pokemon() {
+                
+                return this.$store.getters.pokemon;
+            
+            },
+
+            errors() {
+
+                return this.$store.getters.errors;
+            
+            }
+        },
     
     }
 </script>
