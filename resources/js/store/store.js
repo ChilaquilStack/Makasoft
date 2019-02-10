@@ -31,6 +31,7 @@ const store = new Vuex.Store({
 
             const URL = `pokemons?page=${state.pagination.current_page}`;
 
+<<<<<<< HEAD
             axios
             .get(URL)
             .then(response => {
@@ -38,6 +39,16 @@ const store = new Vuex.Store({
                 state.pagination = response.data.pagination;
             })
             .catch(e => console.log(e));
+=======
+            fetch(URL)
+            .then(response => response.json())
+            .then(data => {
+                state.pokemons = data.data.data;
+                state.pagination = data.pagination;
+            })
+            .catch(e => console.log(e))
+        
+>>>>>>> fetch
         },
 
         ADD_POKEMON(state, pokemon) {
@@ -45,9 +56,14 @@ const store = new Vuex.Store({
             if(state.pokemon.id != '') {
                 
                 const URL = `pokemons/${state.pokemon.id}`;
+<<<<<<< HEAD
                 
                 axios
                 .put(URL, state.pokemon)
+=======
+
+                axios.post(URL, state.pokemon)
+>>>>>>> fetch
                 .then(response => alert('success'))
                 .catch(e => state.errors = e.response.data.errors);
             
@@ -55,8 +71,12 @@ const store = new Vuex.Store({
 
                 const URL = 'pokemons';
                 
+<<<<<<< HEAD
                 axios
                 .post(URL, pokemon)
+=======
+                axios.post(URL, pokemon)
+>>>>>>> fetch
                 .then(response => alert('success'))
                 .catch(e => state.errors = e.response.data.errors);
 
@@ -68,10 +88,21 @@ const store = new Vuex.Store({
         REMOVE_POKEMON(state, pokemon) {
             
             const URL = `pokemons/${pokemon.id}`
+<<<<<<< HEAD
             
             axios
             .delete(URL)
             .then(response => alert('success'))
+=======
+
+            fetch(URL, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            })
+            .then(response => alert('Sucess'))
+>>>>>>> fetch
             .catch(e => console.log(e));
 
             state.pokemon = new Pokemon();

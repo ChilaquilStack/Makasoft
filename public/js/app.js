@@ -53974,9 +53974,17 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   mutations: {
     GET_POKEMONS: function GET_POKEMONS(state) {
       var URL = "pokemons?page=".concat(state.pagination.current_page);
+<<<<<<< HEAD
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(URL).then(function (response) {
         state.pokemons = response.data.data.data;
         state.pagination = response.data.pagination;
+=======
+      fetch(URL).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        state.pokemons = data.data.data;
+        state.pagination = data.pagination;
+>>>>>>> fetch
       }).catch(function (e) {
         return console.log(e);
       });
@@ -53984,7 +53992,11 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     ADD_POKEMON: function ADD_POKEMON(state, pokemon) {
       if (state.pokemon.id != '') {
         var URL = "pokemons/".concat(state.pokemon.id);
+<<<<<<< HEAD
         axios__WEBPACK_IMPORTED_MODULE_2___default.a.put(URL, state.pokemon).then(function (response) {
+=======
+        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(URL, state.pokemon).then(function (response) {
+>>>>>>> fetch
           return alert('success');
         }).catch(function (e) {
           return state.errors = e.response.data.errors;
@@ -54002,8 +54014,18 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     },
     REMOVE_POKEMON: function REMOVE_POKEMON(state, pokemon) {
       var URL = "pokemons/".concat(pokemon.id);
+<<<<<<< HEAD
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.delete(URL).then(function (response) {
         return alert('success');
+=======
+      fetch(URL, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      }).then(function (response) {
+        return alert('Sucess');
+>>>>>>> fetch
       }).catch(function (e) {
         return console.log(e);
       });
