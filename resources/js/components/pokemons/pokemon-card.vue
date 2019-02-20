@@ -2,7 +2,7 @@
 
     <div class="row">
 
-        <div class="col-sm-12 col-md-3 col-xl-4 col-lg-4" v-for="pokemon in pokemons">
+        <div class="col-sm-12 col-md-3 col-xl-4 col-lg-4" v-for="(pokemon,index) in pokemons" :key="index">
             
             <div class="card" style="width: 18rem;">
                 
@@ -42,11 +42,11 @@
 
 <script>
 
-    const modal = require('./pokemon-modal').default;
+    const modal = require('./pokemon-modal');
 
     export default {
 
-        data(){
+        data() {
             return{
                 showPokemon:{}
             }

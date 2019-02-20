@@ -13,14 +13,13 @@
         </title>
     </head>
     <body>
-        @include('layouts.navbar')
         <main id="app">
+            @include('layouts.navbar')
             <div class="container">
-                @yield('content')
+                <router-view></router-view>
             </div>
         </main>
         @include('layouts.footer')
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="js/app.js"></script>
     </body>
 </html>

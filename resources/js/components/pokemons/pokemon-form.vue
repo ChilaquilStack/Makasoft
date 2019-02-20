@@ -6,13 +6,14 @@
             
             <input
                 id="name"
-                type="text" 
+                type="text"
+                name="name"
                 placeholder="Name"
                 @keyup.enter="save"
-                @keyup="validateName"
+                @keyup="validateInput('Por favor ingrese un nombre valido', $event)"
                 v-model="pokemon.name"
-                :class="[ {'form-control': true}, {'is-invalid' : (errors['name'] && errors['name'].length)}, {'is-valid': errors['name'] && !errors['name'].length}]" 
-            >
+                :class="[ {'form-control': true}, {'is-invalid' : (errors['name'] && errors['name'].length)}, {'is-valid': errors['name'] && !errors['name'].length}]"
+            />
 
             <div :class="[{'invalid-feedback': errors['name'] && errors['name'].length}, {'valid-feedback': errors['name'] && !errors['name'].length}]" v-if="errors['name']">
                 {{errors['name'][0]}}
@@ -22,11 +23,11 @@
 
         <div class="form-group">
             <input 
-                id="level" 
+                id="level"
+                name="level"
                 type="number" 
                 placeholder="Level"
                 @keyup.enter="save"
-                @keyup="validateLevel"
                 v-model="pokemon.level"
                 :class="[{'form-control': true}, {'is-invalid': errors['level'] && errors['level'].length}, {'is-valid': errors['level'] && !errors['level'].length}]" 
             >
@@ -63,7 +64,7 @@
                     id="customFileLang"
                     @change="getImage"
                     :class="[{'custom-file-input': true}, {'is-invalid': errors['picture'] && errors['picture'].length}]"
-                >
+                />
                 <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                 <div :class="[{'invalid-feedback': errors['picture'] && errors['picture'].length}, {'valid-feedback': false}]" v-if="errors['picture']">
                     {{errors['picture'][0]}}
@@ -104,23 +105,26 @@
 
             },
 
-            validateName(e) {
-                
-                this.errors['name'] = []
-
-                const validate = e.target.value.match(/[A-Za-z_\s]/) ? true : false;
-                
-                if(!validate)
-                    this.errors['name'].push('Por favor ingrese un nombre valido')
+            validate(data, validationFn, errorMsg) {
+                return validationFn(data) ? data : errorMsg;
             },
 
-            validateLevel(e){
-                this.errors['level'] = [];
-                
-                const validate = e.target.value.match(/[0-9]/) ? true : false;
+            pushError(key, message) {
+                this.errors[key].push(message)
+            },
 
-                if(!validate)
-                    this.errors['level'].push('Por favor ingrese un valor numerico');
+            validateInput(errorMessage, event) {
+
+                if(event) event.preventDefault();
+            
+                const {value, name} = event.target;
+
+                this.errors[name] = []
+
+                const validate = this.validate(value, data => data.match(/[A-Za-z_\s]/), errorMessage);
+
+                if(validate === errorMessage)
+                    this.pushError(name, errorMessage);
             },
 
             save() {

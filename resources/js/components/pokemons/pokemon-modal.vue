@@ -33,4 +33,5 @@
         width: 50%;
         height: auto;
     }
+    
 </style>

@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<template>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     
     <a class="navbar-brand" href="#">{{"Pokedex"}}</a>
     
@@ -19,3 +20,10 @@
         </ul>
     </div>
 </nav>
+</template>
+
+<script>
+export default {
+    
+}
+</script>
