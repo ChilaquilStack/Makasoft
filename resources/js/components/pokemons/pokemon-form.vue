@@ -138,7 +138,6 @@
                 pokemon.append('picture', this.pokemon.picture);
                 
                 this.$store.dispatch('addPokemon', pokemon);
-                this.$store.dispatch('getPokemons');
 
             },
 

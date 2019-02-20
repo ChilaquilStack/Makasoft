@@ -1,6 +1,6 @@
 <template>
     
-    <div>
+    <section>
         
         <pokemonForm 
             @getAll="getAll" 
@@ -23,7 +23,7 @@
             @changepage="changePage">
 		</pokemonPaginator>
     
-    </div>
+    </section>
 
 </template>
 
@@ -41,8 +41,6 @@
         data() {
             
             return {
-                
-                pokemons: [],
 
                 pokemon: {
                     name: '',
@@ -64,64 +62,34 @@
 
         methods: {
             
-            getAll(){
+            getAll() {
 
-                const url = `pokemons?page=${this.pagination.current_page}`;
-
-                axios
-                .get(url)
-                .then(response => {
-                    this.pokemons = response.data.data.data;
-                    this.pagination = response.data.pagination;
-                })
-                .catch(e => console.log(e));
+                this.$store.dispatch('getPokemons');
 
             },
 
             changePage(page) {
 
-                this.pagination.current_page = page;
-                this.getAll();
+                this.$store.dispatch('changePage', page);
 
             },
 
             search(pokemons) {
-                if(!pokemons.length){
-                    this.getAll()
-                } else {
+                if(!pokemons.length)
+                    this.$store.dispatch('getPokemons');
+                else 
                     this.pokemons = pokemons;
-                }
             },
 
             remove(pokemon) {
                 
-                const url = `pokemons/${pokemon.id}`
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.value) {
-                        axios
-                        .delete(url)
-                        .then(response => {
-                            this.alert('success');
-                            this.getAll();
-                        })
-                        .catch(e => console.log(e));
-                    }
-                })
-
+                this.$store.dispatch('removePokemon', pokemon);
             
             },
 
             edit(pokemon){
 
-                this.pokemon = Object.assign({},pokemon);
+                this.$store.dispatch('editPokemon', pokemon);
 
             },
 
@@ -151,6 +119,12 @@
 
             'pokemonPaginator': pokemonPaginator
         
+        },
+
+        computed:{
+            pokemons(){
+                return this.$store.getters.pokemons;
+            }
         }
 
     }

@@ -13,12 +13,12 @@
         </title>
     </head>
     <body>
-        <main id="app">
-            @include('layouts.navbar')
-            <div class="container">
+        <div class="container">
+            <main id="app">
+                @include('layouts.navbar')
                 <router-view></router-view>
-            </div>
-        </main>
+            </main>
+        </div>
         @include('layouts.footer')
         <script src="js/app.js"></script>
     </body>

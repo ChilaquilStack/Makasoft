@@ -96,13 +96,25 @@ const store = new Vuex.Store({
 
         getPokemons: ({commit}) => commit('GET_POKEMONS'),
 
-        removePokemon: ({commit}, pokemon) => commit('REMOVE_POKEMON', pokemon),
-
-        addPokemon: ({commit}, pokemon) => commit('ADD_POKEMON', pokemon),
-
-        editPokemon: ({commit}, pokemon) => commit('EDIT_POKEMON', pokemon),
-
-        changePage: ({commit}, page) => commit('CHANGE_PAGE', page),
+        removePokemon: ({commit}, pokemon) => {
+            commit('REMOVE_POKEMON', pokemon)
+            commit('GET_POKEMONS');
+        },
+        
+        addPokemon: ({commit}, pokemon) => {
+            commit('ADD_POKEMON', pokemon)
+            commit('GET_POKEMONS');
+        },
+        
+        editPokemon: ({commit}, pokemon) => {
+            commit('EDIT_POKEMON', pokemon)
+            commit('GET_POKEMONS');
+        },
+        
+        changePage: ({commit}, page) => {
+            commit('CHANGE_PAGE', page)
+            commit('GET_POKEMONS');
+        },
 
         searchPokemons: ({commit}, pokemons) => commit('SEARCH_POKEMONS', pokemons)
     
