@@ -7,4 +7,3 @@ Route::resource('pokemons', 'PokemonController');
 Route::get('/{any}', function () {
     return view('layouts.master');
 })->where('any', '.*');
-
