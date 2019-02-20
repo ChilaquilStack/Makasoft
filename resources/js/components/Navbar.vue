@@ -11,11 +11,11 @@
         <ul class="navbar-nav mr-auto">
 
             <li class="nav-item">
-                <router-link :to="{name: 'pokemons'}" class="nav-link">{{"Pokemons"}}</router-link>
+                <router-link :to="{name: 'pokemons'}" class="nav-link" exact>{{"Pokemons"}}</router-link>
             </li>
 
             <li class="nav-item">
-                <router-link :to="{name: 'trainers'}" class="nav-link">{{"Trainers"}}</router-link>
+                <router-link :to="{name: 'trainers'}" class="nav-link">{{"Rols"}}</router-link>
             </li>
         </ul>
     </div>
@@ -27,3 +27,14 @@ export default {
     
 }
 </script>
+
+<style scoped>
+
+   nav li:hover,
+
+   nav li:active{
+      background-color: indianred;
+      cursor: pointer;
+    }
+
+</style>

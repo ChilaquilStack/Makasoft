@@ -1,10 +1,7 @@
-import Pokemons from '../components/pokemons/index';
-import Trainers from '../components/trainers/Trainer';
+import users from '../components/users/index';
 
 const routes = [
-  { path: '/pokemons', component: Pokemons, name: 'pokemons'},
-  { path: '/trainers', component: Trainers, name: 'trainers'}
+  {path: '/', component: users, name:'users'},
 ]
-
 
 export default routes;

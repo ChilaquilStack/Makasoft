@@ -5,7 +5,7 @@ import store from './store/store';
 import routes from './route/index';
 import VueRouter from 'vue-router';
 import navbar from './components/Navbar';
-import pokemons from './components/pokemons/index';
+import users from './components/users/index';
 
 Vue.use(VueRouter);
 
@@ -21,6 +21,6 @@ new Vue({
     el: '#app',
     components:{
         navbar,
-        pokemons
+        users
     }
 });

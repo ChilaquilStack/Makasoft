@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
-import Pokemon from '../class/Pokemon';
+import User from '../class/User';
 
 Vue.use(Vuex);
 
@@ -9,9 +9,9 @@ const store = new Vuex.Store({
 
     state: {
         
-        pokemons: [],
+        users: [],
         
-        pokemon: new Pokemon(),
+        user: new User(),
                 
         pagination: {
             total: 0, 
@@ -27,96 +27,127 @@ const store = new Vuex.Store({
     
     mutations: {
 
-        async GET_POKEMONS (state) {
+        SET_USERS: (state, users) => state.users = users,
 
-            const URL = `pokemons?page=${state.pagination.current_page}`;
-
-            try {
-                
-                const {data} = await axios.get(URL);
-                
-                state.pokemons = data.data.data;
-                state.pagination = data.pagination;
-                
-            } catch (error) {
-                error => console.log(error);
-            }
-            
-        
-        },
-
-        ADD_POKEMON(state, pokemon) {
-            
-            if(state.pokemon.id != '') {
-                
-                const URL = `pokemons/${state.pokemon.id}`;
-
-                axios.post(URL, state.pokemon)
-                .then(response => alert('success'))
-                .catch(e => state.errors = e.response.data.errors);
-            
-            } else {
-
-                const URL = 'pokemons';
-                
-                axios.post(URL, pokemon)
-                .then(response => alert('success'))
-                .catch(e => state.errors = e.response.data.errors);
-
-            }
-
-            state.pokemon = new Pokemon();
-        },
-
-        REMOVE_POKEMON(state, pokemon) {
-            
-            const URL = `pokemons/${pokemon.id}`
-
-            fetch(URL, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            })
-            .then(response => alert('Sucess'))
-            .catch(e => console.log(e));
-
-            state.pokemon = new Pokemon();
-
-        },
-
-        EDIT_POKEMON: (state, pokemon)  => state.pokemon = pokemon,
+        RESET_USER: (state, user) => state.user = user,
 
         CHANGE_PAGE: (state, page) => state.pagination.current_page = page,
 
-        SEARCH_POKEMONS: (state, pokemons) => state.pokemons = pokemons
+        SET_PAGINATION : (state, pagination) => state.pagination = pagination
+    
     },
 
     actions: {
 
-        getPokemons: ({commit}) => commit('GET_POKEMONS'),
+        async getUsers({commit, state}) {
+            
+            const URL = `users?page=${state.pagination.current_page}`;
+            
+            try {
 
-        removePokemon: ({commit}, pokemon) => commit('REMOVE_POKEMON', pokemon),
+                const {data} = await axios.get(URL)
+                
+                commit('SET_USERS', data.data.data);
+                
+                commit('SET_PAGINATION', data.pagination);
+                
+            } catch (error) {
 
-        addPokemon: ({commit}, pokemon) => commit('ADD_POKEMON', pokemon),
+                state.errors = error.response.error;    
+            
+            }
+            
+        },
 
-        editPokemon: ({commit}, pokemon) => commit('EDIT_POKEMON', pokemon),
+        setUsers({commit}, users) {
+            commit('SET_USERS', users);
+        },
+        
+        async removeUser({commit, state}, user) {
 
-        changePage: ({commit}, page) => commit('CHANGE_PAGE', page),
+            const URL = `users/${user.id}`
 
-        searchPokemons: ({commit}, pokemons) => commit('SEARCH_POKEMONS', pokemons)
+            try {
+
+                await axios.delete(URL);
+                
+                commit('RESET_USER', new User());
+
+                store.dispatch('getUsers');
+                
+            } catch (error) {
+                
+                console.log(error);
+                //state.errors = error.response.error;
+            
+            }
+
+        },
+        
+        async addUser({commit, state}, user) {
+
+            if(state.user.id != '') {
+                
+                const URL = `users/${state.user.id}`;
+
+                try {
+                    
+                    const {data} = await axios.post(URL, state.user);
+
+                    commit('SET_USERS', data.data.data);
+                
+                } catch (error) {
+
+                    state.errors = error.response.data.errors;
+
+                }
+                
+            } else {
+
+                const URL = 'users';
+                
+                try {
+
+                    const message = await axios.post(URL, user)
+
+                    store.dispatch('getUsers');
+                    
+                } catch (error) {
+                    
+                    state.errors = error.response.data.errors;
+                
+                }
+
+            }
+            
+            commit('RESET_USER', new User());
+        },
+        
+        editUser: ({commit}, user) => {
+
+            commit('RESET_USER', user);
+        
+        },
+        
+        changePage: ({commit}, page) => {
+
+            commit('CHANGE_PAGE', page);
+        
+        },
+
+        searchPokemons: ({commit}, users) => commit('SET_USERS', users)
     
     },
 
     getters: {
 
-        pokemons: state => state.pokemons,
-
-        pokemon: state => state.pokemon,
+        errors: state => state.errors,
         
-        pagination: state => state.pagination,
+        user: state => state.user,
         
-        errors: state => state.errors
+        users: state => state.users,
+        
+        pagination: state => state.pagination
     
     }
 

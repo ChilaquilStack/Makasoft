@@ -9,17 +9,17 @@
         <link rel="stylesheet" href="css/app.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <title>
-            @yield('title','Pokedex')
+            @yield('title','Users')
         </title>
     </head>
     <body>
-        <main id="app">
+        <div class="container">
             @include('layouts.navbar')
-            <div class="container">
+            <main id="app">
                 <router-view></router-view>
-            </div>
-        </main>
-        @include('layouts.footer')
+            </main>
+        </div>
+         @include('layouts.footer')
         <script src="js/app.js"></script>
     </body>
 </html>
