@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Rol;
+use DB;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreUserPost;
+use App\Http\Requests\UpdateUserPost;
 
 class UserController extends Controller {
     /**
@@ -13,11 +17,7 @@ class UserController extends Controller {
      */
     public function index() {
 
-        $users = User::paginate(6);
-        
-        foreach ($users as $user) {
-            $user->rol;
-        }
+        $users = User::with('rol')->paginate(6);
         
         $response = [
             'pagination' => [
@@ -50,7 +50,7 @@ class UserController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(StoreUserPost $request) {
 
         $picture = $request->file("picture");
         $name = time() . $picture->getClientOriginalName();
@@ -58,14 +58,14 @@ class UserController extends Controller {
         $upload = $picture->move($dir, $name);
         
         User::create([
-            'name' => $request['name'],
             'picture' => $name,
+            'name' => $request['name'],
             'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-            'rol_id' => $request['rol_id']
+            'rol_id' => $request['rol_id'],
+            'password' => $request['password']
         ]);
 
-        return response()->json(['message' => 'Se agrego el socio con exito'], 200);
+        return response()->json(['message' => 'user create', 'errro' => false], 200);
         
     }
 
@@ -98,9 +98,39 @@ class UserController extends Controller {
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
-    {
-        //
+    public function update(UpdateUserPost $request, User $user) {
+
+        if($request->hasFile('picture')) {
+
+            $picture = $request->file('picture');
+            
+            $name = time() . $picture->getClientOriginalName();
+            
+            $dir = public_path().'/img/';
+            
+            $upload = $picture->move($dir, $name);
+            
+            if($user->picture) {
+                if (file_exists($dir . $user->picture))
+                    unlink($dir . $user->picture);
+            }
+            
+            $user->update([
+                'name' => $request['name'],
+                'picture' => $name,
+                'email' => $request['email'],
+                'rol_id' => $request['rol_id'],
+                'password' => $user->password
+            ]);
+
+        } else {
+            
+            $user->update($request->all());
+
+        }
+        
+        return response()->json(['message' => 'update user', 'error' => false], 200);
+    
     }
 
     /**
@@ -110,22 +140,24 @@ class UserController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user) {
+        
         $dir = public_path() . '/img/' . $user->picture;
-        unlink($dir);
+        
+        if(file_exists($dir))
+            unlink($dir);
+        
         $user->delete();
+    
     }
 
     public function search(Request $request) {
         
         $value = $request['value'];
-        $value = '%'.$value.'%';
-
-        $users = User::where('name', 'like', $value)->get();
+        $value = '%' . $value . '%';
         
-        foreach ($users as $user) {
-            $user->rol;
-        }
+        $users = User::filter($value);
         
-        return response()->json(['users' => $users], 200);
+        return response()->json($users, 200);
+    
     }
 }

@@ -1,12 +1,28 @@
 <?php
 
-Route::resource('users', 'UserController');
-Route::post('users/search', 'UserController@search');
+Route::middleware('auth')->group(function() {
+    
+    Route::post('users/search', 'UserController@search');
+    
+    Route::post('users/{user}', 'UserController@update');
+    
+    Route::resource('users', 'UserController');
+    
+    Route::resource('rols', 'RolController');
+      
+    Route::get('/', function(){
+        return view('layouts.master');
+    });
+
+});
+
+Auth::routes();
 
 Route::get('/{any}', function () {
     return view('layouts.master');
 })->where('any', '.*');
 
-//Auth::routes();
 
-//Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
+
+

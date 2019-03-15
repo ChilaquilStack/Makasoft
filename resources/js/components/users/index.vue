@@ -1,21 +1,10 @@
-<template>
-
-    <div>
-        
-        <h1>
-            {{'Users'}}
-        </h1>
-
-        <usersForm/>
-
-        <usersSearch/>
-        
-        <usersPanel/>
-        
-        <usersPaginator :offset="3"/>
-
-    </div>
-
+<template lang="pug">
+  section
+    h1 Users
+    <usersForm/>
+    <usersSearch/>
+    <usersPanel/>
+    <usersPaginator :offset="3"/>
 </template>
 
 <script>

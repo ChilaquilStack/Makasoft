@@ -1,29 +1,10 @@
-<template>
-
-    <div class="container h-100">
-
-        <div class="d-flex justify-content-center h-100">
-            
-            <div class="searchbar">
-                
-                <input 
-                class="search_input" 
-                type="text" 
-                name="seacrh" 
-                placeholder="Search..." 
-                @keyup="search"
-                />
-
-                <a href="#" class="search_icon">
-                    <i class="fas fa-search"></i>
-                </a>
-            
-            </div>
-        
-        </div>
-    
-    </div>
-
+<template lang="pug">
+  .container.h-100
+    .d-flex.justify-content-center.h-100
+      .searchbar
+        input.search_input(type='text', name='seacrh', placeholder='Search...', @keyup='search')
+        a.search_icon(href='#')
+          i.fas.fa-search
 </template>
 
 <script>
@@ -42,12 +23,10 @@
                 .post(url,{value})
                 .then(response => {
                     
-                    const {data:{users}} = response;
+                    const {data} = response;
 
-                    console.log({users});
-
-                    if(users.length)
-                        this.$store.dispatch('setUsers', users);
+                    if(data.length)
+                        this.$store.dispatch('setUsers', data);
                     else
                         this.$store.dispatch('getUsers');
                 

@@ -31,4 +31,15 @@ class User extends Authenticatable
     public function rol() {
         return $this->belongsTo('App\Rol');
     }
+
+    public function scopeFilter($query, $value) {
+        return $query->with('rol')->whereHas('rol', function($query) use ($value) {
+            $query->where('name', 'like', $value);
+        })->orWhere('name', 'like', $value)->get();
+    }
+
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = bcrypt($value);
+    }
+    
 }

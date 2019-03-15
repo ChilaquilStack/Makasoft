@@ -1,42 +1,21 @@
-<template>
+<template lang="pug">
 
-    <div class="row">
-
-        <div class="col-sm-12 col-md-3 col-xl-4 col-lg-4" v-for="(user,index) in users" :key="index">
-            
-            <div class="card" style="width: 18rem;">
-                
-                <img :src="`img/${user.picture}`" class="card-img-top" :alt="user.picture" @click="show(user)">
-                
-                <div class="card-body">
-                    
-                    <h5 class="card-title text-center">{{user.name}}</h5>
-                    
-                    <p class="card-text text-center">
-                        <small class="text-muted">{{user.email}} / {{user.rol.name}}</small>
-                    </p>
-               
-                </div>
-                
-                <div class="card-footer btn-group text-center">
-                    
-                    <a href="#" class="btn btn-danger" @click="remove(user, $event)">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                    
-                    <a href="#" class="btn btn-warning" @click="edit(user, $event)">
-                        <i class="far fa-edit"></i>
-                    </a>
-                
-                </div>
-            
-            </div>
-        
-        </div>
-
-        <userModal :user="showUser"/>
-    
-    </div>
+  .row
+    .col-sm-12.col-md-3.col-xl-4.col-lg-4(v-for='(user,index) in users', :key='index')
+      .card(style='width: 18rem;')
+        img.card-img-top(:src="[ user.picture ? `img/${user.picture}` : 'img/default.png']", :alt='user.picture', @click='show(user)')
+        .card-body
+          h5.card-title.text-center {{user.name}}
+          p.card-text.text-center
+            span.badge.badge-light {{user.email}}
+          p.card-text.text-center
+            span.badge.badge-light {{user.rol.name}}
+        .card-footer.btn-group.text-center
+          a.btn.btn-danger(href='#', @click='remove(user, $event)')
+            i.fas.fa-trash
+          a.btn.btn-warning(href='#', @click='edit(user, $event)')
+            i.far.fa-edit
+    userModal(:user='showUser')
 
 </template>
 
@@ -102,33 +81,21 @@
 
 <style scope="true">
 
-    .card-img-top{
-        
-        cursor: pointer;
-        
-        -webkit-filter: grayscale(100%);
-        
-        -moz-filter: grayscale(100%);
-        
-        -ms-filter: grayscale(100%);
-        
-        -o-filter: grayscale(100%);
-        
-        filter: grayscale(100%);	
-    }
-
-    .card-img-top:hover{
-
-        -webkit-filter: grayscale(0);
-        
-        -moz-filter: grayscale(0);
-        
-        -ms-filter: grayscale(0);
-        
-        -o-filter: grayscale(0);
-        
-        filter: grayscale(0);
-
-    }
+  .card-img-top {
+    cursor: pointer;
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+  }
+    
+  .card-img-top:hover{
+    -webkit-filter: grayscale(0);
+    -moz-filter: grayscale(0);
+    -ms-filter: grayscale(0);
+    -o-filter: grayscale(0);
+    filter: grayscale(0);
+  }
 
 </style>

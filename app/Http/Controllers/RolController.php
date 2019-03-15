@@ -12,9 +12,8 @@ class RolController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index() {
+        return response()->json(Rol::all(), 200);
     }
 
     /**

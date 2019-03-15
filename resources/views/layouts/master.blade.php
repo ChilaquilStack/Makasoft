@@ -9,17 +9,15 @@
         <link rel="stylesheet" href="css/app.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <title>
-            @yield('title','Users')
+            @yield('title','Makasoft')
         </title>
     </head>
     <body>
-        <div class="container">
+        <div class="container" id="app">
             @include('layouts.navbar')
-            <main id="app">
-                <router-view></router-view>
-            </main>
+            @include('layouts.main')
+            @include('layouts.footer')
         </div>
-         @include('layouts.footer')
         <script src="js/app.js"></script>
     </body>
 </html>

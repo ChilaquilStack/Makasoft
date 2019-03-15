@@ -30,6 +30,8 @@ const store = new Vuex.Store({
         SET_USERS: (state, users) => state.users = users,
 
         RESET_USER: (state, user) => state.user = user,
+        
+        RESET_ERRORS: (state) => state.errors = {},
 
         CHANGE_PAGE: (state, page) => state.pagination.current_page = page,
 
@@ -77,8 +79,7 @@ const store = new Vuex.Store({
                 
             } catch (error) {
                 
-                console.log(error);
-                //state.errors = error.response.error;
+                state.errors = error.response.error;
             
             }
 
@@ -86,41 +87,24 @@ const store = new Vuex.Store({
         
         async addUser({commit, state}, user) {
 
-            if(state.user.id != '') {
-                
-                const URL = `users/${state.user.id}`;
-
-                try {
+            const URL = state.user.id != '' ? `users/${state.user.id}` : 'users'; 
+            
+            try {
                     
-                    const {data} = await axios.post(URL, state.user);
+                await axios.post(URL, user);
 
-                    commit('SET_USERS', data.data.data);
-                
-                } catch (error) {
+                store.dispatch('getUsers');
+            
+                commit('RESET_USER', new User());
 
-                    state.errors = error.response.data.errors;
+                commit('RESET_ERRORS');
+            
+            } catch (error) {
 
-                }
-                
-            } else {
-
-                const URL = 'users';
-                
-                try {
-
-                    const message = await axios.post(URL, user)
-
-                    store.dispatch('getUsers');
-                    
-                } catch (error) {
-                    
-                    state.errors = error.response.data.errors;
-                
-                }
+                state.errors = error.response.data.errors;
 
             }
-            
-            commit('RESET_USER', new User());
+
         },
         
         editUser: ({commit}, user) => {

@@ -1,22 +1,22 @@
-<template>
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{user.name}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <img :src="`img/${user.picture}`" :alt="user.picture" class="image">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">{{"Close"}}</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<template lang="pug">
+
+  #modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+    
+    .modal-dialog(role='document')
+      
+      .modal-content
+        
+        .modal-header
+          h5.modal-title {{user.name}}
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+        
+        .modal-body.text-center
+          img.image(:src='`img/${user.picture}`', :alt='user.picture')
+        
+        .modal-footer
+          button.btn.btn-danger(type='button', data-dismiss='modal') Close
+
 </template>
 
 <script>
@@ -32,11 +32,11 @@
     }
 </script>
 
-<style scope="true">
-
-    .image {
-        width: 50%;
-        height: auto;
-    }
+<style lang="css" scoped>
+  
+  .image{
+    width: 50%;
+    height: auto;
+  }
     
 </style>

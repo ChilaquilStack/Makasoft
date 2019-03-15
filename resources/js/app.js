@@ -10,8 +10,9 @@ import users from './components/users/index';
 Vue.use(VueRouter);
 
 const router = new VueRouter({
+    routes,
     mode: 'history',
-    routes
+        linkActiveClass : 'active'
 });
 
 
