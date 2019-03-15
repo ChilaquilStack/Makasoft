@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'rol_id', 'picture'
     ];
 
     /**
@@ -27,4 +27,19 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function rol() {
+        return $this->belongsTo('App\Rol');
+    }
+
+    public function scopeFilter($query, $value) {
+        return $query->with('rol')->whereHas('rol', function($query) use ($value) {
+            $query->where('name', 'like', $value);
+        })->orWhere('name', 'like', $value)->get();
+    }
+
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = bcrypt($value);
+    }
+    
 }
