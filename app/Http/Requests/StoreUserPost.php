@@ -26,7 +26,7 @@ class StoreUserPost extends FormRequest
             'email' => 'required|unique:users|email',
             'password' => 'required',
             'rol_id' => 'required',
-            'picture' => 'required|image',
+            'picture' => 'nullable|required|image',
         ];
     }
 

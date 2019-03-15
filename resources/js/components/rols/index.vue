@@ -4,8 +4,6 @@
 
     <rol-header/>
 
-    <rol-form/>
-
     <rol-table :rols="rols"/>
 
 </template>

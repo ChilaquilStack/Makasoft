@@ -12,7 +12,7 @@
             span(aria-hidden='true') ×
         
         .modal-body.text-center
-          img.image(:src='`img/${user.picture}`', :alt='user.picture')
+          img.image(:src="[user.picture ? `img/${user.picture}` : 'img/default.png']", :alt='user.picture')
         
         .modal-footer
           button.btn.btn-danger(type='button', data-dismiss='modal') Close

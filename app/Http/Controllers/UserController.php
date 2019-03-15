@@ -65,7 +65,7 @@ class UserController extends Controller {
             'password' => $request['password']
         ]);
 
-        return response()->json(['message' => 'user create', 'errro' => false], 200);
+        return response()->json(['message' => 'user create', 'error' => false], 201);
         
     }
 
@@ -141,10 +141,15 @@ class UserController extends Controller {
      */
     public function destroy(User $user) {
         
-        $dir = public_path() . '/img/' . $user->picture;
         
-        if(file_exists($dir))
-            unlink($dir);
+        if($user->picture) {
+            
+            $dir = public_path() . '/img/' . $user->picture;
+            
+            if(file_exists($dir))
+                unlink($dir);
+        
+        }
         
         $user->delete();
     
@@ -153,6 +158,7 @@ class UserController extends Controller {
     public function search(Request $request) {
         
         $value = $request['value'];
+        
         $value = '%' . $value . '%';
         
         $users = User::filter($value);
